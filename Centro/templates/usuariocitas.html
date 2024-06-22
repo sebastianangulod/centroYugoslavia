@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Citas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <h1>Sistema de Citas</h1>
+  <h2>Bienvenido: {{paciente.Nombre}} {{paciente.Apellido}}</h2>
+  <div class="buttons">
+    <!--  -->
+    <button id="registerAppointmentBtn"><a href="{% url 'registrar_citas' %}" style="color: white; text-decoration: none;">Registrar Cita</a></button>
+    <button id="generatePdfBtn">PDF</button>
+    <button id="CerrarBtn"><a href="{% url 'cerrar_sesion' %}" style="color: white; text-decoration: none;">Cerrar Sesión</a></button>
+  </div>
+
+  <div id="appointmentsTable">
+    <table>
+      <thead>
+        <tr>
+          <th>Número de Cita</th>
+          <th>Médico</th>
+          <th>Especialidad</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody id="appointmentRows">
+        {% for c in cita %}
+          <tr>
+            <td>{{c.id_cita}}</td>
+            <td>{{c.medico.Nombre}} {{c.medico.Apellido}}</td>
+            <td>{{c.especialidad}}</td>
+            <td>{{c.fecha_cita}}</td>
+            <td>{{c.hora}}</td>
+            <td>{{c.estado}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="counter">
+    Total de Citas: <span id="appointmentCount"></span>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const appointmentCountElement = document.getElementById('appointmentCount');
+      const appointmentRows = document.getElementById('appointmentRows').getElementsByTagName('tr');
+      appointmentCountElement.textContent = appointmentRows.length;
+    });
+  </script>
+</body>
+</html>
+

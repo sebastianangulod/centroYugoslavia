@@ -1,0 +1,59 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yugoslavia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+    <link href="{% static 'css/login.css' %}" rel="stylesheet">
+</head>
+<body>
+    <img src="{% static 'img/logo.png' %}" alt="Logo" width="200" height="70">
+    <div class="contenedor__todo" >
+        <div class="caja__trasera">
+           <div class="caja__trasera-login">
+            <h3>¿Ya tienes una cuenta?</h3>
+            <p>Inicia sesion para ingresar a la pagina</p>
+            <button id="btn__inicio-sesion">iniciar sesion</button>
+           </div>
+           <div class="caja__trasera-register">
+            <h3>¿Aun no tienes una cuenta?</h3>
+            <p>Registrate para que puedas iniciar sesion</p>
+            <button id="btn__registrarse">Registrarse</button>
+           </div>
+        </div>
+        <!--formulario de inicio de sesion y registro -->
+        <div class="contenedor__login-register">
+            <!--ingresar-->
+            <form method="POST" class="formulario__login">
+                <h2>Inicio sesion</h2>
+                {% csrf_token %}
+                <input type="text" placeholder="correo electronico" name="login_email" required>
+                <input type="password" placeholder="contraseña" name="login_contrasena" required>
+                <button>Ingresar</button>
+            </form>
+            <!--ciudadano-->
+            <form method="POST" class="formulario__register">
+                <div class="barra">
+                    <h2>Registrarse</h2>
+                </div>
+                {% csrf_token %}
+                <input type="text" placeholder="DNI" name="dni" required>
+                <input type="text" placeholder="Nombre" name="nombre" required>
+                <input type="text" placeholder="Apellido" name="apellido" required>
+                <input type="text" placeholder="Fecha de Nacimiento" name="fecha_nacimiento" required>
+                <input type="text" placeholder="Género" name="genero" required>
+                <input type="text" placeholder="Dirección" name="direccion" required>
+                <input type="text" placeholder="Número telefonico" name="telefono" required>
+                <input type="text" placeholder="correo electronico" name="email" required>
+                <input type="password" placeholder="contraseña" name="contrasena" required>
+                <button>Registrarse</button>
+            </form>
+        </div>
+    </div>
+    <script src="{% static 'js/login.js' %}"></script>      
+</body>
+</html>

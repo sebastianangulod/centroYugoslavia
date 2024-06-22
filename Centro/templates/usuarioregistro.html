@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Citas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static 'css/style2.css' %}">
+</head>
+<body>
+  <h1>Registro de Citas</h1>
+
+  <div class="buttons">
+    <!-- -->
+    <button id="viewAppointmentsBtn"><a href="{% url 'ver_citas' %}" style="color: white; text-decoration: none;">Mis Citas</a></button>
+    <button id="CerrarBtn"><a href="{% url 'cerrar_sesion' %}" style="color: white; text-decoration: none;">Cerrar Sesión</a></button>
+  </div>
+
+  <div class="form-container">
+    <form id="appointmentForm" method="POST">
+      {% csrf_token %}
+      <label for="dni">DNI:</label>
+      <input type="text" id="dni" name="dni" required>
+
+      <label for="specialty">Especialidad:</label>
+      <select id="specialty" name="especialidad" required>
+        <option value="cardiologia">Cardiología</option>
+        <option value="dermatologia">Dermatología</option>
+        <option value="neurologia">Neurología</option>
+        <option value="pediatria">Pediatría</option>
+        <option value="ginecologia">Ginecología</option>
+        <!-- Agrega más especialidades según sea necesario -->
+      </select>
+
+      <label for="specialty">Médico:</label>
+      <select id="specialty2" name="Medico" required>
+        {% for medico in medicos %}
+          <option value="{{medico.Nombre}}">{{medico.Nombre}} {{medico.Apellido}}</option>  
+        {% endfor %}
+      </select>
+
+      <label for="availability">Fecha de Disponibilidad:</label>
+      <input type="date" id="availability" name="Fechadedisponibilidad" required>
+
+      <label for="availability">Hora:</label>
+      <input type="time" id="availability" name="hora" required>
+
+      <label for="reason">Motivo de la Cita:</label>
+      <textarea id="reason" name="Motivo" rows="4" required></textarea>
+
+      <button type="submit">Registrar Cita</button>
+    </form>
+  </div>
+</body>
+</html>
