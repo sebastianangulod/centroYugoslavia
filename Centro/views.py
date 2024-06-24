@@ -18,7 +18,7 @@ def login_view(request):
                     messages.success(request, 'Inicio de sesión de administrador exitoso.')
                     login(request,useradmin)
                     request.session['is_logged_in'] = True
-                    return redirect('citas_admin')
+                    return redirect('main_admin')
             except:
                 pass
             paciente = Paciente.objects.filter(Email=email, Contraseña=contrasena).first()
@@ -99,8 +99,22 @@ def cerrar_sesion(request):
     logout(request)
     return redirect('login')
 
-@login_required()
+#@login_required
+def main_admin(request):
+    return render(request, 'Admin.html')
+
 def citas_admin(request):
-    cita = Cita.objects.all()
-    context = {'cita': cita}
-    return render(request, 'citasadmin.html', context)
+    citas = Cita.objects.all()
+    context = {'citas': citas}
+    return render(request, 'citas.html', context)
+
+def pacientes_admin(request):
+    pacientes = Paciente.objects.all()
+    print(pacientes)
+    context = {'pacientes': pacientes}
+    return render(request, 'Pacient.html', context)
+
+def medicos_admin(request):
+    medicos= Medico.objects.all()
+    context = {'medicos':medicos}
+    return render(request, 'Especiali.html', context)

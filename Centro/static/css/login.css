@@ -7,7 +7,7 @@
 
 }
 body{
-    background-image: url(../img/fondo.jpg);
+    background-image: url(../img/fondoo.jpg);
      background-size: cover;
      background-repeat: no-repeat;
      background-position: center;
@@ -115,21 +115,9 @@ body{
     opacity: 1;
     display: block;
 }
-.formulario__register {
+.formulario__register{
     display: none;
-  }
-  
-.barra{
-    padding-top: 200px;
 }
-
-  .columna__izquierda,
-  .columna__derecha {
-    display: flex;
-    flex-direction: column; 
-    flex: 1; 
-    padding: 10px; 
-  }
 footer{
     background-color: rgb(241, 235, 235);
     position: absolute;
@@ -139,8 +127,3 @@ footer{
     text-align: center;
 }
 
-.campo__fila {
-    display: flex;
-    flex-direction: row; 
-    margin-bottom: 10px; 
-  }
