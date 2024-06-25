@@ -20,6 +20,7 @@
                   <li><a class="te"href="{% url 'citas_admin' %}">Citas</a></li>
                   <li><a class="te"href="{% url 'pacientes_admin' %}">Pacientes</a></li>
                   <li><a class="te"href="{% url 'medicos_admin' %}">Especialidades</a></li>
+                  <li><a class="te"href="{% url 'cerrar_sesion' %}">Cerrar Sesión</a></li>
               </ul>
             </div>
         </nav>
@@ -28,10 +29,10 @@
     <main>
     <div class="horizontal">
         <div class="descarga">
-            <button type="submit" style="  width: 100px; 
+            <a href="{% url 'crear_cita' %}"><button type="submit" style="  width: 100px; 
             height: 70PX; ">
             NUEVO
-            </button> 
+            </button> </a>
         </div>
         <div class="descarga">
             <button type="submit" style="  width: 100px; 
@@ -63,15 +64,15 @@
             <tbody>
               {% for cita in citas %}
                 <tr class="borde">
-                  <th scope="row">1</th>
+                  <th scope="row">{{cita.id_cita}}</th>
                   <th scope="col">{{cita.paciente.Nombre}} {{cita.paciente.Apellido}}</th>
                   <th scope="col">{{cita.medico.Nombre}} {{cita.medico.Apellido}}</th>
                   <th scope="col">{{cita.medico.especialidad}}</th>
                   <th scope="col">{{cita.fecha_cita}}</th>
                   <th scope="col">{{cita.estado}}</th>
                   <th scope="col"> 
-                      <button class="btn"><img style="width: 30px; height: auto;  margin-right: 5px; " src="{% static 'Iconos/eliminar.png' %}" alt="Eliminar"></button>
-                      <button class="btn"><img style="width: 30px; height: auto;  margin-right: 5px; " src="{% static 'Iconos/editar.png' %}" alt="Editar"></button>
+                      <a href="{% url 'eliminar_cita' cita.id_cita %}"><button class="btn"><img style="width: 30px; height: auto;  margin-right: 5px; " src="{% static 'Iconos/eliminar.png' %}" alt="Eliminar"></button></a>
+                      <a href="{% url 'editar_cita' cita.id_cita %}"><button class="btn"><img style="width: 30px; height: auto;  margin-right: 5px; " src="{% static 'Iconos/editar.png' %}" alt="Editar"></button></a>
                   </th>
                 </tr>
               {% endfor %}

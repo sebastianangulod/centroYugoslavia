@@ -20,6 +20,7 @@
                 <li><a class="te"href="{% url 'citas_admin' %}">Citas</a></li>
                 <li><a class="te"href="{% url 'pacientes_admin' %}">Pacientes</a></li>
                 <li><a class="te"href="{% url 'medicos_admin' %}">Especialidades</a></li>
+                <li><a class="te"href="{% url 'cerrar_sesion' %}">Cerrar Sesión</a></li>
             </ul>
             </div>
         </nav>
@@ -50,28 +51,15 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="borde">
-                <th scope="row">1</th>
-                <th scope="col">AAAAA</th>
-                <th scope="col">AAAAAAAAA</th>
-                <th scope="col">14/02/24</th>
-                <th scope="col">PENDIENTE</th>
-              </tr>
-              <tr class="borde">
-                <th scope="row">2</th>
-                <th scope="col">AAAAA</th>
-                <th scope="col">AAAAAAAAA</th>
-                <th scope="col">14/02/24</th>
-                <th scope="col">PENDIENTE</th>
-              </tr>
-              <tr class="borde">
-                <th scope="row">3</th>
-
-                <th scope="col">AAAAA</th>
-                <th scope="col">AAAAAAAAA</th>
-                <th scope="col">14/02/24</th>
-                <th scope="col">PENDIENTE</th>
-              </tr>
+              {% for cita in citas %}
+                <tr class="borde">
+                  <th scope="row">{{cita.paciente.id_paciente}}</th>
+                  <th scope="col">{{cita.paciente.Nombre}} {{cita.paciente.Apellido}}</th>
+                  <th scope="col">{{cita.medico.Nombre}} {{cita.medico.Apellido}}</th>
+                  <th scope="col">{{cita.fecha_cita}}</th>
+                  <th scope="col">{{cita.estado}}</th>
+                </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>

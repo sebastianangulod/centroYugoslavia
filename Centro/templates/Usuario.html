@@ -16,13 +16,14 @@
             <ul>
               <div class="usu">
                 <li><img style="width: 30px; height: auto;  margin-right: 5px; " src="{% static 'Iconos/usuario.png' %}"><a class="te"href="">Usuario</a></li>
-                <li><a class="te"href="">Mis citas</a></li>
-                <li><a class="te"href="">Registrar cita</a></li>
+                <li><a class="te"href="{% url 'ver_citas' id %}">Mis citas</a></li>
+                <li><a class="te"href="{% url 'registrar_citas'%}">Registrar cita</a></li>
+                <li><a class="te"href="{% url 'cerrar_sesion' %}">Cerrar Sesión</a></li>
             </ul>
             </div>
         </nav>
     </div>
-
+    
     <main>
     <div class="horizontal">
         <div class="descarga">
@@ -31,45 +32,34 @@
             PDF 
             </button> 
         </div>
-        <div class="Nt">
+        <!--<div class="Nt">
             <p> <img src="{% static 'Iconos/genteicon.png' %}" alt="Icono" > Total pacientes<span id="totalpac"> numero</span></p>
-        </div>
+        </div>-->
     </div>
     <div class="table-container">
       <div class="bor">
       <table>
-          <thead>
-            <tr class="borde" style="border-radius: 20px;">
-              <th scope="col">#</th>
-              <th scope="col">PACIENTE</th>
-              <th scope="col">ESPECIALISTA</th>
-              <th scope="col">FECHA</th>
-              <th scope="col">ESTADO </th>
+        <thead>
+          <tr>
+            <th>Número de Cita</th>
+            <th>Médico</th>
+            <th>Especialidad</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for c in cita %}
+            <tr>
+              <td>{{c.id_cita}}</td>
+              <td>{{c.medico.Nombre}} {{c.medico.Apellido}}</td>
+              <td>{{c.especialidad}}</td>
+              <td>{{c.fecha_cita}}</td>
+              <td>{{c.hora}}</td>
+              <td>{{c.estado}}</td>
             </tr>
-          </thead>
-          <tbody>
-            <tr class="borde">
-              <th scope="row">1</th>
-              <th scope="col">AAAAA</th>
-              <th scope="col">AAAAAAAAA</th>
-              <th scope="col">14/02/24</th>
-              <th scope="col">PENDIENTE</th>
-            </tr>
-            <tr class="borde">
-              <th scope="row">2</th>
-              <th scope="col">AAAAA</th>
-              <th scope="col">AAAAAAAAA</th>
-              <th scope="col">14/02/24</th>
-              <th scope="col">PENDIENTE</th>
-            </tr>
-            <tr class="borde">
-              <th scope="row">3</th>
-
-              <th scope="col">AAAAA</th>
-              <th scope="col">AAAAAAAAA</th>
-              <th scope="col">14/02/24</th>
-              <th scope="col">PENDIENTE</th>
-            </tr>
+          {% endfor %}
           </tbody>
         </table>
       </div>
