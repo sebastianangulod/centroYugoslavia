@@ -1,10 +1,17 @@
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, render, redirect, HttpResponse
 from django.contrib import messages
 from django.contrib.auth import logout, login
 from django.urls import reverse
 from .models import *
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from io import BytesIO
+
+from openpyxl import Workbook
+from openpyxl.styles import Font
 
 # Create your views here.
 def login_view(request):
@@ -268,3 +275,169 @@ def editar_cita(request,id_cita):
         return redirect('citas_admin')
     Medicos=Medico.objects.all()
     return render(request, 'Editar_cita.html', context={'cita':cita, 'medicos':Medicos})
+
+
+def pdfAdmin_citas(request):
+    template = get_template('citasForm.html')
+    citas = Cita.objects.all()  # Ajusta esto según tu modelo y query
+    context = {'citas': citas}
+    html = template.render(context)
+    
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result)
+    
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return HttpResponse('Error al generar el PDF', status=400)
+
+def excel_citas(request):
+    # Crear un nuevo libro de trabajo y seleccionar la hoja activa
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Reporte de Citas"
+
+    # Definir los encabezados
+    columns = ['#', 'Paciente', 'Especialista', 'Especialidad', 'Fecha', 'Estado']
+
+    # Escribir los encabezados
+    for col_num, column_title in enumerate(columns, 1):
+        cell = ws.cell(row=1, column=col_num)
+        cell.value = column_title
+        cell.font = Font(bold=True)
+
+    # Obtener todas las citas
+    citas = Cita.objects.all()
+
+    # Escribir los datos
+    for row_num, cita in enumerate(citas, 2):
+        ws.cell(row=row_num, column=1, value=cita.id_cita)
+        ws.cell(row=row_num, column=2, value=f"{cita.paciente.Nombre} {cita.paciente.Apellido}")
+        ws.cell(row=row_num, column=3, value=f"{cita.medico.Nombre} {cita.medico.Apellido}")
+        ws.cell(row=row_num, column=4, value=cita.medico.especialidad)
+        ws.cell(row=row_num, column=5, value=cita.fecha_cita)
+        ws.cell(row=row_num, column=6, value=cita.estado)
+
+    # Ajustar el ancho de las columnas
+    for column_cells in ws.columns:
+        length = max(len(str(cell.value)) for cell in column_cells)
+        ws.column_dimensions[column_cells[0].column_letter].width = length + 2
+
+    # Crear la respuesta HTTP con el archivo Excel
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=Reporte_Citas.xlsx'
+
+    # Guardar el libro de trabajo en la respuesta
+    wb.save(response)
+
+    return response
+
+def pdfAdmin_pacientes(request):
+    template = get_template('pacientesForm.html')
+    pacientes = Paciente.objects.all()  # Ajusta esto según tu modelo y query
+    context = {'pacientes': pacientes}
+    html = template.render(context)
+    
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result)
+    
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return HttpResponse('Error al generar el PDF', status=400)
+
+def excel_pacientes(request):
+    # Crear un nuevo libro de trabajo y seleccionar la hoja activa
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Reporte de Pacientes"
+
+    # Definir los encabezados
+    columns = ['#', 'DNI', 'Nombre', 'Apellido', 'Fecha de Nacimiento', 'Género', 'Dirección', 'Teléfono', 'Email']
+
+    # Escribir los encabezados
+    for col_num, column_title in enumerate(columns, 1):
+        cell = ws.cell(row=1, column=col_num)
+        cell.value = column_title
+        cell.font = Font(bold=True)
+
+    # Obtener todos los pacientes
+    pacientes = Paciente.objects.all()
+
+    # Escribir los datos
+    for row_num, paciente in enumerate(pacientes, 2):
+        ws.cell(row=row_num, column=1, value=paciente.id_paciente)
+        ws.cell(row=row_num, column=2, value=paciente.Dni)
+        ws.cell(row=row_num, column=3, value=paciente.Nombre)
+        ws.cell(row=row_num, column=4, value=paciente.Apellido)
+        ws.cell(row=row_num, column=5, value=paciente.Fecha_nacimiento)
+        ws.cell(row=row_num, column=6, value=paciente.Genero)
+        ws.cell(row=row_num, column=7, value=paciente.Direccion)
+        ws.cell(row=row_num, column=8, value=paciente.Telefono)
+        ws.cell(row=row_num, column=9, value=paciente.Email)
+
+    # Ajustar el ancho de las columnas
+    for column_cells in ws.columns:
+        length = max(len(str(cell.value)) for cell in column_cells)
+        ws.column_dimensions[column_cells[0].column_letter].width = length + 2
+
+    # Crear la respuesta HTTP con el archivo Excel
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=Reporte_Pacientes.xlsx'
+
+    # Guardar el libro de trabajo en la respuesta
+    wb.save(response)
+
+    return response
+
+def pdfAdmin_medicos(request):
+    template = get_template('medicosForm.html')
+    medicos = Medico.objects.all()  # Ajusta esto según tu modelo y query
+    context = {'medicos': medicos}
+    html = template.render(context)
+    
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result)
+    
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return HttpResponse('Error al generar el PDF', status=400)
+
+def excel_medicos(request):
+    # Crear un nuevo libro de trabajo y seleccionar la hoja activa
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Reporte de Médicos"
+
+    # Definir los encabezados
+    columns = ['#', 'Nombre', 'Apellido', 'Especialidad', 'Teléfono', 'Email']
+
+    # Escribir los encabezados
+    for col_num, column_title in enumerate(columns, 1):
+        cell = ws.cell(row=1, column=col_num)
+        cell.value = column_title
+        cell.font = Font(bold=True)
+
+    # Obtener todos los médicos
+    medicos = Medico.objects.all()
+
+    # Escribir los datos
+    for row_num, medico in enumerate(medicos, 2):
+        ws.cell(row=row_num, column=1, value=medico.id_medico)
+        ws.cell(row=row_num, column=2, value=medico.Nombre)
+        ws.cell(row=row_num, column=3, value=medico.Apellido)
+        ws.cell(row=row_num, column=4, value=medico.especialidad)
+        ws.cell(row=row_num, column=5, value=medico.Telefono)
+        ws.cell(row=row_num, column=6, value=medico.Email)
+
+    # Ajustar el ancho de las columnas
+    for column_cells in ws.columns:
+        length = max(len(str(cell.value)) for cell in column_cells)
+        ws.column_dimensions[column_cells[0].column_letter].width = length + 2
+
+    # Crear la respuesta HTTP con el archivo Excel
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=Reporte_Médicos.xlsx'
+
+    # Guardar el libro de trabajo en la respuesta
+    wb.save(response)
+
+    return response

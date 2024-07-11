@@ -50,20 +50,8 @@ nav ul li{
     align-items: center;
     gap:5px;
 }
-.descarga1 button{
-    display: flex; 
-    align-items: center;
-    padding: 25px 15px;
-    margin-top: 60%;
-    margin-left: 55%;
-    border:none;
-    border-radius: 15px;
-    font-size: 14px;
-    background: #3555FF;
-    color: rgb(255, 255, 255);
-    cursor: pointer;
-}
-.descarga button{
+.descarga button,
+.descarga a{
     display: flex; 
     align-items: center;
     padding: 10px 15px;
@@ -76,6 +64,8 @@ nav ul li{
     color: rgb(255, 255, 255);
     cursor: pointer;
 }
+
+
 .Nt{
     display: flex;
     align-items: center;

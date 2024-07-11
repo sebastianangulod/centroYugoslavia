@@ -27,24 +27,22 @@
     </div>
 
     <main>
-    <div class="horizontal">
+      <div class="horizontal">
         <div class="descarga">
-          <a href="{% url 'crear_medico' %}"><button type="submit" style="  width: 100px; 
+            <a href="{% url 'crear_medico' %}" type="button" style="  width: 100px; 
             height: 70PX; ">
             NUEVO
-            </button></a>
+        </a>
         </div>
         <div class="descarga">
-            <button type="submit" style="  width: 100px; 
+            <a href="{% url 'pdfAdmin_medicos' %}" type="button" style="  width: 100px; 
             height: 70PX; ">
                 <img src="{% static 'Iconos/pdficon.png' %}" alt="Icono">
-            PDF 
-            </button> 
+            PDF </a>
         </div>
         <div class="descarga">
-            <button type="submit" style="  width: 100px; 
-            height: 70PX; "> EXCEL
-            </button> 
+            <a href="{% url 'excel_medicos' %}" type="button" type="submit" style="  width: 100px; 
+            height: 70PX; "> EXCEL</a>
         </div>
     </div>
     <div class="table-container">

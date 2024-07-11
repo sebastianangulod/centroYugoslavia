@@ -19,4 +19,10 @@ urlpatterns = [
     path('crear_cita/', views.crear_cita, name="crear_cita"),
     path('crear_medico/', views.crear_medico, name="crear_medico"),
     path('crear_paciente/', views.crear_paciente, name="crear_paciente"),
+    path('pdfAdmin_citas/', views.pdfAdmin_citas, name='pdfAdmin_citas'),
+    path('excel_citas/',views.excel_citas,name="excel_citas"),
+    path('excel_medicos/',views.excel_medicos,name="excel_medicos"),
+    path('excel_pacientes/',views.excel_pacientes,name="excel_pacientes"),
+    path('pdfAdmin_medicos/', views.pdfAdmin_medicos, name='pdfAdmin_medicos'),
+    path('pdfAdmin_pacientes/', views.pdfAdmin_pacientes, name='pdfAdmin_pacientes'),
 ]
