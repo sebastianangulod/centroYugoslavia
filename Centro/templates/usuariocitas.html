@@ -4,19 +4,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema de Citas</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <title>Citas del Paciente</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+    }
+    h1, h2 {
+      color: #2c3e50;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+  </style>
 </head>
 <body>
   <h1>Sistema de Citas</h1>
-  <h2>Bienvenido: {{paciente.Nombre}} {{paciente.Apellido}}</h2>
-  <div class="buttons">
-    <!--  -->
-    <button id="registerAppointmentBtn"><a href="{% url 'registrar_citas' %}" style="color: white; text-decoration: none;">Registrar Cita</a></button>
-    <button id="generatePdfBtn">PDF</button>
-    <button id="CerrarBtn"><a href="{% url 'cerrar_sesion' %}" style="color: white; text-decoration: none;">Cerrar Sesión</a></button>
-  </div>
+  <h2>Paciente: {{paciente.Nombre}} {{paciente.Apellido}}</h2>
 
   <div id="appointmentsTable">
     <table>
@@ -30,8 +48,8 @@
           <th>Estado</th>
         </tr>
       </thead>
-      <tbody id="appointmentRows">
-        {% for c in cita %}
+      <tbody>
+        {% for c in citas %}
           <tr>
             <td>{{c.id_cita}}</td>
             <td>{{c.medico.Nombre}} {{c.medico.Apellido}}</td>
@@ -44,6 +62,8 @@
       </tbody>
     </table>
   </div>
+</body>
+</html>
 
   <div class="counter">
     Total de Citas: <span id="appointmentCount"></span>

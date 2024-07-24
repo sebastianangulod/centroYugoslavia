@@ -1,19 +1,43 @@
+import pandas as pd
+import random
+import os
 from django.shortcuts import get_object_or_404, render, redirect, HttpResponse
 from django.contrib import messages
 from django.contrib.auth import logout, login
 from django.urls import reverse
+
+from django.utils.html import strip_tags
+
+from django.conf import settings
 from .models import *
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
-from django.template.loader import get_template
+from django.template.loader import get_template, render_to_string
 from xhtml2pdf import pisa
 from io import BytesIO
 
 from openpyxl import Workbook
 from openpyxl.styles import Font
 
-# Create your views here.
+from django.core.mail import send_mail, EmailMultiAlternatives
+from Yugoslavia.settings import EMAIL_HOST_USER
+
+# Cargar los códigos postales válidos desde el archivo Excel
+excel_path = os.path.join(settings.BASE_DIR, 'Centro', 'data', 'codigo_postal.xlsx')
+df = pd.read_excel(excel_path, header=1)
+CODIGOS_POSTALES_VALIDOS = df[df['Distrito'] == 'Nuevo Chimbote']['Código Postal'].unique().tolist()
+TODOS_CODIGOS_POSTALES = df['Código Postal'].unique().tolist()
+def asignar_codigo_postal():
+    return random.choice(TODOS_CODIGOS_POSTALES)
+
+def es_codigo_postal_valido(codigo_postal):
+    return codigo_postal in CODIGOS_POSTALES_VALIDOS
+
+def obtener_info_codigo_postal(codigo_postal):
+    fila = df[df['Código Postal'] == codigo_postal].iloc[0]
+    return fila['Provincia'], fila['Departamento']
+
 def login_view(request):
     if request.method == 'POST':
         # Verificar si la solicitud es para el inicio de sesión o el registro
@@ -24,15 +48,15 @@ def login_view(request):
                 useradmin = User.objects.get(email=email)
                 if useradmin:
                     messages.success(request, 'Inicio de sesión de administrador exitoso.')
-                    login(request,useradmin)
+                    login(request, useradmin)
                     request.session['is_logged_in'] = True
                     return redirect('main_admin')
-            except:
+            except User.DoesNotExist:
                 pass
+            
             paciente = Paciente.objects.filter(Email=email, Contraseña=contrasena).first()
 
             if paciente:
-                messages.success(request, 'Inicio de sesión exitoso.')
                 return redirect('ver_citas', paciente_id=paciente.id_paciente)
             else:
                 messages.error(request, 'Correo electrónico o contraseña incorrectos.')
@@ -53,22 +77,51 @@ def login_view(request):
                 messages.error(request, 'El DNI ya está registrado.')
                 return redirect('login')
 
-            # Crear un nuevo objeto Paciente
-            paciente = Paciente.objects.create(
-                Dni=dni,
-                Nombre=Nombre,
-                Apellido=Apellido,
-                Fecha_nacimiento=Fecha_nacimiento,
-                Genero=Genero,
-                Direccion=Direccion,
-                Telefono=Telefono,
-                Email=Email,
-                Contraseña=Contraseña
-            )
-            paciente.save()
-            messages.success(request, 'Registro exitoso.')
-            return redirect('login')
+            # Asignar código postal aleatorio
+            codigo_postal = asignar_codigo_postal()
+
+            # Verificar si el código postal es válido
+            if es_codigo_postal_valido(codigo_postal):
+                # Crear un nuevo objeto Paciente
+                paciente = Paciente.objects.create(
+                    Dni=dni,
+                    Nombre=Nombre,
+                    Apellido=Apellido,
+                    Fecha_nacimiento=Fecha_nacimiento,
+                    Genero=Genero,
+                    Direccion=Direccion,
+                    Telefono=Telefono,
+                    Email=Email,
+                    Contraseña=Contraseña,
+                    Codigo_postal=codigo_postal
+                )
+                paciente.save()
+                messages.success(request, 'Registro exitoso.')
+                contexto = {
+                    'nombre': paciente.Nombre,
+                    'apellido': paciente.Apellido,
+                    'dni': paciente.Dni,
+                    'email': paciente.Email,
+                }
+                enviar_email_html(
+                    'Registro Exitoso',
+                    'registroGmail.html',
+                    contexto,
+                    paciente.Email
+                )
+                return redirect('login')
+            else:
+                provincia, departamento = obtener_info_codigo_postal(codigo_postal)
+                return redirect('NoValido', provincia=provincia, departamento=departamento)
+    
     return render(request, 'index.html')
+
+def NoValido(request, provincia, departamento):
+    context = {
+        'provincia': provincia,
+        'departamento': departamento
+    }
+    return render(request, 'NoValido.html', context)
 
 def usuario_citas(request, paciente_id):
     paciente = get_object_or_404(Paciente, id_paciente=paciente_id)
@@ -96,6 +149,20 @@ def usuario_registro(request):
             motivo = Motivo
         )
         cita.save()
+        contexto = {
+            'nombre': paciente.Nombre,
+            'especialidad': cita.especialidad,
+            'medico': f"{cita.medico.Nombre} {cita.medico.Apellido}",
+            'fecha': cita.fecha_cita,
+            'hora': cita.hora,
+            'motivo': cita.motivo,
+        }
+        enviar_email_html(
+            'Cita Registrada',
+            'nuevacitaGmail.html',
+            contexto,
+            paciente.Email
+        )
         messages.success(request, 'Registro exitoso.')
         return redirect(reverse('ver_citas', args=[paciente.id_paciente]))
     Medicos=Medico.objects.all()
@@ -105,6 +172,24 @@ def usuario_registro(request):
 def cerrar_sesion(request):
     logout(request)
     return redirect('login')
+
+def paciente_pdf(request, paciente_id):
+    paciente = get_object_or_404(Paciente, id_paciente=paciente_id)
+    citas = Cita.objects.filter(paciente=paciente)
+    
+    template = get_template('PacientePDF.html')
+    context = {
+        'paciente': paciente,
+        'citas': citas,
+    }
+    html = template.render(context)
+    
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result)
+    
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return HttpResponse('Error al generar el PDF', status=400)
 
 @login_required
 def main_admin(request):
@@ -441,3 +526,15 @@ def excel_medicos(request):
     wb.save(response)
 
     return response
+
+def enviar_email_html(asunto, template, contexto, destinatario):
+    html_message = render_to_string(template, contexto)
+    plain_message = strip_tags(html_message)
+    email = EmailMultiAlternatives(
+        subject=asunto,
+        body=plain_message,
+        from_email=None,
+        to=[destinatario],
+    )
+    email.attach_alternative(html_message, "text/html")
+    email.send()

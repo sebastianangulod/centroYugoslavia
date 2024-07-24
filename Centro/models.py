@@ -29,6 +29,7 @@ class Paciente(models.Model):
     Telefono = models.CharField(max_length=50)
     Email = models.EmailField(max_length=50)
     Contraseña = models.CharField(max_length=50)
+    Codigo_postal=models.IntegerField()
 
     def __str__(self):
         return f"{self.Nombre} {self.Apellido}"

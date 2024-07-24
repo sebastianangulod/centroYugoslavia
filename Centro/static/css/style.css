@@ -69,3 +69,18 @@ td {
   margin-top: 20px;
   font-size: 1.2em;
 }
+
+.descarga button,
+.descarga a{
+    display: flex; 
+    align-items: center;
+    padding: 10px 15px;
+    margin-top: 50%;
+    margin-left: 55%;
+    border:none;
+    border-radius: 15px;
+    font-size: 14px;
+    background: #3555FF;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+}

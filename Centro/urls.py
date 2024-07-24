@@ -25,4 +25,6 @@ urlpatterns = [
     path('excel_pacientes/',views.excel_pacientes,name="excel_pacientes"),
     path('pdfAdmin_medicos/', views.pdfAdmin_medicos, name='pdfAdmin_medicos'),
     path('pdfAdmin_pacientes/', views.pdfAdmin_pacientes, name='pdfAdmin_pacientes'),
+    path('no-valido/<str:provincia>/<str:departamento>/', views.NoValido, name='NoValido'),
+    path('paciente-pdf/<int:paciente_id>/', views.paciente_pdf, name='paciente_pdf'),
 ]

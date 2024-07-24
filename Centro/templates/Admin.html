@@ -25,7 +25,15 @@
             </div>
         </nav>
     </div>
-
+    <div id="mensajes">
+      {% if messages %}
+          {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}">
+                  {{ message }}
+              </div>
+          {% endfor %}
+      {% endif %}
+  </div>
     <main>
     <div class="horizontal">
         <div class="Nt">
@@ -64,7 +72,10 @@
           </table>
         </div>
     </div>
+      <form action="" method="POST">
+        {% csrf_token %}
+        <button>Enviar correo electrónico</button>
+      </form>
     </main>
-
 </body>
 </html>

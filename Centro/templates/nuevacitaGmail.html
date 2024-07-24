@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+        <header style="background-color: #3498db; color: white; text-align: center; padding: 10px;">
+            <h1>Confirmación de Cita Médica</h1>
+        </header>
+        <nav>
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuVylZc3jL5dBFp8Fs5cODIuPAlBFKI5hwSQ&s" alt="Logo" width="220" height="130">
+        </nav>
+        <main style="padding: 20px;">
+            <h2>Cita Registrada Exitosamente</h2>
+            <p>Estimado/a {{nombre}},</p>
+            <p>Su cita ha sido registrada con éxito. Aquí están los detalles:</p>
+            <ul>
+                <li>Especialidad: {{especialidad}}</li>
+                <li>Médico: {{medico}}</li>
+                <li>Fecha: {{fecha}}</li>
+                <li>Hora: {{hora}}</li>
+                <li>Motivo: {{motivo}}</li>
+            </ul>
+            <p>Por favor, llegue 15 minutos antes de su cita.</p>
+        </main>
+        <footer style="background-color: #f4f4f4; text-align: center; padding: 10px; margin-top: 20px;">
+            <p>&copy; Centro de Salud Yugoslavia. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+</body>
+</html>

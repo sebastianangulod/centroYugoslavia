@@ -53,8 +53,8 @@ nav ul li{
     display: flex; 
     align-items: center;
     padding: 10px 70px;
-    margin-top: 50%;
-    margin-left: 55%;
+    margin-top: 100px;
+    margin-left: 100px;
     border:none;
     border-radius: 15px;
     font-size: 14px;

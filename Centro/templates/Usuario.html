@@ -25,16 +25,11 @@
     </div>
     
     <main>
-    <div class="horizontal">
-        <div class="descarga">
-            <button type="submit">
-                <img src="{% static 'Iconos/pdficon.png' %}" alt="Icono">
-            PDF 
-            </button> 
-        </div>
-        <!--<div class="Nt">
-            <p> <img src="{% static 'Iconos/genteicon.png' %}" alt="Icono" > Total pacientes<span id="totalpac"> numero</span></p>
-        </div>-->
+      <div class="descarga">
+        <button><a href="{% url 'paciente_pdf' paciente.id_paciente %}" type="button" style="  width: 100px; 
+        height: 70PX; ">
+            <img src="{% static 'Iconos/pdficon.png' %}" alt="Icono">
+        PDF </a></button>
     </div>
     <div class="table-container">
       <div class="bor">
